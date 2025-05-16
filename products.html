@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - Bagalicious</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="product-page">
+  <!-- Header -->
+  <header>
+    <a href="homepage.html" class="logo-link">
+      <img src="logo_no_background.png" alt="Bagalicious Logo" class="logo-image">
+    </a>    
+    <nav>
+      <a href="homepage.html">Home</a>
+      <a href="products.html">Products</a>
+    </nav>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Αναζήτηση προϊόντων...">
+  </div>
+
+  <!-- Product Container -->
+  <main class="products-container" id="productsContainer">
+    <!-- Products will be loaded dynamically here -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Ομάδα: Δημήτρης Νεοκάζης, Βασίλης Άλφα, Λίνα Χασιώτη, Βαγγέλης Δρασλιάκης
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Global variables
+    let currentProducts = [];
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadInitialProducts();
+      setupSearch();
+    });
+
+    // Load initial products based on category
+    async function loadInitialProducts() {
+  try {
+    const url = category 
+      ? `http://127.0.0.1:5000/products-by-category?category=${category}`
+      : 'http://127.0.0.1:5000/popular-products';
+    
+    console.log("Fetching from:", url);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error("Bad response:", response.status);
+      throw new Error("Bad response from server");
+    }
+
+    const data = await response.json();
+    console.log("Fetched data:", data);
+    
+    currentProducts = data;
+    renderProducts(data);
+  } catch (error) {
+    console.error("Error loading products:", error);
+    showError("Πρόβλημα φόρτωσης προϊόντων");
+  }
+}
+
+    // Setup search functionality
+    function setupSearch() {
+      const searchInput = document.getElementById('searchInput');
+      let searchTimeout;
+
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        const query = searchInput.value.trim();
+
+        if (query.length >= 2) {
+          searchTimeout = setTimeout(() => searchProducts(query), 300);
+        } else if (query.length === 0) {
+          // Reset to initial products when search is cleared
+          renderProducts(currentProducts);
+        }
+      });
+    }
+
+    // Search products
+    async function searchProducts(query) {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        renderProducts(data);
+      } catch (error) {
+        console.error("Search error:", error);
+        showError("Πρόβλημα κατά την αναζήτηση");
+      }
+    }
+
+    // Handle product like
+    async function handleLike(productId) {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/like', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: productId })
+        });
+
+        if (response.ok) {
+          // Update the liked product locally
+          const updatedProducts = currentProducts.map(product => {
+            if (product._id === productId) {
+              return { ...product, likes: product.likes + 1 };
+            }
+            return product;
+          });
+          
+          currentProducts = updatedProducts;
+          renderProducts(updatedProducts);
+        }
+      } catch (error) {
+        console.error("Error liking product:", error);
+      }
+    }
+
+    // Render products to the page
+    function renderProducts(products) {
+      const container = document.getElementById('productsContainer');
+      
+      if (!products || products.length === 0) {
+        container.innerHTML = '<p class="no-results">Δεν βρέθηκαν προϊόντα</p>';
+        return;
+      }
+
+      container.innerHTML = products.map(product => `
+        <div class="product">
+          <img src="${product.image}" alt="${product.title}" 
+               onclick="handleLike('${product._id}')">
+          <h3>${product.title}</h3>
+          <p>${product.description}</p>
+          <div class="likes">${product.likes} ♥</div>
+        </div>
+      `).join('');
+    }
+
+    // Show error message
+    function showError(message) {
+      const container = document.getElementById('productsContainer');
+      container.innerHTML = `<p class="error-message">${message}</p>`;
+    }
+  </script>
+</body>
+</html>

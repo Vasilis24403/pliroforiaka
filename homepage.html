@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bagalicious</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="homepage">
+  <div class="main-container">
+
+    <div class="page-wrapper">
+
+      <!-- Λογότυπο -->
+      <header> 
+        <img src="logo_no_background.png" alt="Bagalicious Logo" class="logo-image">
+      </header>
+
+      <!-- Κεντρική μπάρα κατηγοριών -->
+      <nav> 
+        <div class="navBottom"> 
+          <h3 class="menuItem">Men's</h3>
+          <h3 class="menuItem">Women's</h3>
+          <h3 class="menuItem">Kids</h3>
+          <h3 class="menuItem">Sports</h3>
+          <h3 class="menuItem">Travel</h3>
+          <h3 class="menuItem">Hiking-Climbing</h3>
+        </div>
+      </nav>
+
+      <!-- Περιοχή slideshow -->
+      <div class="slider">
+        <!-- Container με όλες τις εικόνες του slider -->
+        <div class="slide-container" id="slideContainer">
+          <img src="τσαντες/ανδρικη1α.jpeg" class="slide" alt="img1">
+          <img src="τσαντες/γυναικεια1α.jpeg" class="slide" alt="img2">
+          <img src="τσαντες/παιδικη1α.jpeg" class="slide" alt="img3">
+          <img src="τσαντες/sport1a.jpeg" class="slide" alt="img4">
+          <img src="τσαντες/βαλιτσα2γ.jpeg" class="slide" alt="img5">
+          <img src="τσαντες/ορειβατικα1α.jpeg" class="slide" alt="img6">
+        </div>
+
+        <!-- Κουκίδες επιλογής εικόνας -->
+        <div class="dots" id="dotsContainer">
+          <span class="dot" data-index="0"></span>
+          <span class="dot" data-index="1"></span>
+          <span class="dot" data-index="2"></span>
+          <span class="dot" data-index="3"></span>
+          <span class="dot" data-index="4"></span>
+          <span class="dot" data-index="5"></span>
+        </div>
+      </div>
+    </div> <!-- Κλείσιμο page-wrapper -->
+
+    <!-- Κουμπί κάτω από το slider για μετάβαση στη σελίδα προϊόντων -->
+    <div class="slider-button-container">
+      <a href="products.html" class="slider-button">Δείτε τα προϊόντα μας</a>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+      Ομάδα: Δημήτρης Νεοκάζης, Βασίλης Άλφα, Λίνα Χασιώτη, Βαγγέλης Δρασλιάκης
+    </footer>
+
+  </div> <!-- Κλείσιμο main-container -->
+
+  <script>
+    // Παίρνουμε τα στοιχεία του slider και των dots
+    const slideContainer = document.getElementById("slideContainer");
+    const dots = document.querySelectorAll(".dot");
+    let currentIndex = 0; // τρέχουσα εικόνα
+    let totalSlides = dots.length;
+    let timeoutId;
+
+    // Εμφανίζει την εικόνα με βάση το index
+    function showSlide(index) {
+      currentIndex = index;
+      slideContainer.style.transform = `translateX(-${index * 100}%)`;
+      updateDots();
+      resetTimer();
+    }
+
+    // Ενημερώνει τις κουκίδες ώστε να δείχνει ποια είναι ενεργή
+    function updateDots() {
+      dots.forEach(dot => dot.classList.remove("active"));
+      dots[currentIndex].classList.add("active");
+    }
+
+    // Πηγαίνει στην επόμενη εικόνα
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      showSlide(currentIndex);
+    }
+
+    // Κάνει reset τον χρονομετρητή μετά από click ή αλλαγή εικόνας
+    function resetTimer() {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(nextSlide, 3000);
+    }
+
+    // Όταν πατηθεί μία κουκίδα
+    dots.forEach(dot => {
+      dot.addEventListener("click", () => {
+        let index = parseInt(dot.getAttribute("data-index"));
+        showSlide(index);
+      });
+    });
+
+    // Εκκίνηση με την πρώτη εικόνα
+    showSlide(0);
+  </script>
+  <script>
+  // Προσθήκη στο </body>
+  fetch('http://127.0.0.1:5000/popular-products')
+    .then(res => res.json())
+    .then(data => {
+      const slider = document.getElementById('slider');
+      data.forEach(product => {
+        slider.innerHTML += `
+          <div class="slide">
+            <img src="${product.image}" alt="${product.title}">
+            <h3>${product.title}</h3>
+          </div>`;
+      });
+      initSlider(); 
+    });
+  </script>
+</body>
+</html>

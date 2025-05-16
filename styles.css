@@ -1,0 +1,205 @@
+/* === Βασικά resets για όλα τα στοιχεία === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Καθορισμός πλήρους ύψους για html και body === */
+html, body {
+  height: 100%;
+}
+
+/* === Γενικό σώμα === */
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+}
+
+/* === Κύριο wrapper === */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* === Τυλίγει όλο το περιεχόμενο εκτός του footer === */
+.page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Λογότυπο === */
+.logo-image {
+  max-width: 250px;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+
+/* === Header (πάντα μπεζ) === */
+header {
+  background-color: #efe7e0;
+  color: black;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* === Footer (πάντα μπορντό) === */
+footer {
+  background-color: #6c1f25;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* === Πλοήγηση === */
+nav {
+  background-color: #6c1f25;
+  color: white;
+  padding: 20px 50px;
+}
+
+nav a {
+  color: white;
+  margin: 0 1rem;
+  text-decoration: none;
+}
+
+.navBottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuItem {
+  margin-right: 30px;
+  cursor: pointer;
+  color: rgb(180, 179, 178);
+  font-weight: 400;
+}
+
+/* === Slider === */
+.slider {
+  width: 80%;
+  margin: 20px auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.slide-container {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 100%;
+}
+
+.slide {
+  flex: 0 0 100%;
+  height: 300px;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.dot {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: #efe7e0;
+  margin: 0 5px;
+  cursor: pointer;
+  border: 2px solid #6c1f25;
+}
+
+.dot.active {
+  background-color: #6c1f25;
+}
+
+/* === Κουμπί κάτω από το slider === */
+.slider-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.slider-button {
+  background-color: #6c1f25;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.slider-button:hover {
+  background-color: #8a2a32;
+}
+
+/* === Μπάρα αναζήτησης === */
+.search-bar {
+  text-align: center;
+  padding: 1rem;
+  background-color: #6c1f25;
+}
+
+.search-bar input {
+  padding: 0.5rem;
+  width: 50%;
+  font-size: 1rem;
+}
+
+/* === Πλέγμα προϊόντων === */
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.product {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+  padding: 1rem;
+}
+
+.product img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.product h3 {
+  margin: 0.5rem 0;
+}
+
+.product p {
+  font-size: 0.9rem;
+  color: #555;
+}
+.product img {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.product img:hover {
+  transform: scale(1.03);
+}
+
+.likes {
+  color: #e74c3c;
+  font-weight: bold;
+  margin-top: 10px;
+}
